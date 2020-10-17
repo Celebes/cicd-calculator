@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+    jenkins:
+        container_name: jenkins
+        image: jenkins/jenkins
+        depends_on:
+            - registry
+        ports:
+            - "49001:8080"
+        volumes:
+            - ./jenkins_home:/var/jenkins_home
+        networks:
+            - my_cicd_network
+    registry:
+        container_name: registry
+        image: registry
+        restart: always
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./registry:/var/lib/registry
+        networks:
+            - my_cicd_network
+
+networks:
+    my_cicd_network:

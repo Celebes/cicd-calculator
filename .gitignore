@@ -32,3 +32,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Jenkins volumes ###
+/jenkins/jenkins_home
+/jenkins/registry
