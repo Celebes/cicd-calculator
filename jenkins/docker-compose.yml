@@ -3,13 +3,15 @@ version: '3'
 services:
     jenkins:
         container_name: jenkins
-        image: jenkins/jenkins
+        image: registry:5000/jenkins
+        build: .
         depends_on:
             - registry
         ports:
             - "49001:8080"
         volumes:
             - ./jenkins_home:/var/jenkins_home
+            - /var/run/docker.sock:/var/run/docker.sock
         networks:
             - my_cicd_network
     registry:
