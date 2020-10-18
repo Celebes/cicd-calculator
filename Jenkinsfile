@@ -29,7 +29,7 @@ pipeline {
         }
         stage("Docker build") {
             steps {
-				sh "chmod 666 /var/run/docker.sock"
+				sh "sudo chmod 666 /var/run/docker.sock"
                 sh "docker build -t registry:5000/calculator ."
             }
         }
