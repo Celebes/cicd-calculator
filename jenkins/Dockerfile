@@ -1,12 +1,22 @@
-FROM jenkins/jenkins
-USER root
-RUN apt-get update && \
-	apt-get -y install sudo && \
-	curl -sfL -o docker.tgz "https://download.docker.com/linux/static/stable/x86_64/docker-19.03.13.tgz" && \
-	tar -xzf docker.tgz --directory /usr/local/bin && \
-	rm docker.tgz && \
-	groupadd docker && \
-	usermod -aG docker jenkins && \
-	newgrp docker
-ENV PATH="${PATH}:/usr/local/bin/docker"
-USER jenkins
+FROM jenkins/jenkins 
+
+USER 0
+
+ARG DOCKERGID=998
+
+# Docker
+RUN apt-get update \
+    && apt-get install software-properties-common apt-transport-https ca-certificates gnupg-agent dialog apt-utils -y \ 
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+    && add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable" \
+    && apt-get update \
+    && apt-get install docker-ce-cli -y
+
+# Setup users and groups
+RUN addgroup --gid ${DOCKERGID} docker
+RUN usermod -aG docker jenkins
+
+USER 1000
